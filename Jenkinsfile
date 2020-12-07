@@ -25,7 +25,7 @@ pipeline {
       stage('Deploy') {
         steps{
           sshagent(credentials : ['vm']) {
-            sh "ssh -o StrictHostKeyChecking=no ikhsan@34.101.177.2 <<EOF docker rm -f python-azure \n docker container run -d -p 5555:5555 --name python-azure ikhsannugs/python-azure:${BUILD_NUMBER} \n EOF"
+            sh 'ssh -o StrictHostKeyChecking=no ikhsan@34.101.177.2 "docker rm -f python-azure; docker container run -d -p 5555:5555 --name python-azure ikhsannugs/python-azure:${BUILD_NUMBER}"'
           }
         }
       } 
