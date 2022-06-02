@@ -6,13 +6,6 @@ pipeline {
           checkout scm
         }
       }
-      stage('Unit Test') {
-        steps{
-          script{
-            sh "python Tests/unit_tests/test_views.py"
-          }
-        }
-      }
       stage('Build & Push') {
         steps{
           script{
