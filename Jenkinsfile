@@ -23,10 +23,23 @@ pipeline {
           }
         }
       }
-      stage('Deploy') {
+      stage('Deploy To DEV') {
+        when {
+          branch 'dev'
+        }
         steps{
           withKubeConfig([credentialsId: 'kubeconfig-cluster-ict']) {
-            sh "kubectl apply -f deploy-apps.yaml"
+            sh "kubectl apply -f deploy-apps.yaml -n dev"
+          }
+        }
+      }
+      stage('Deploy To PROD') {
+        when {
+          branch 'main'
+        }
+        steps{
+          withKubeConfig([credentialsId: 'kubeconfig-cluster-ict']) {
+            sh "kubectl apply -f deploy-apps.yaml -n prod"
           }
         }
       } 
