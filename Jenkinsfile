@@ -16,16 +16,18 @@ pipeline {
       stage('Build & Push') {
         steps{
           script{
-            sh "docker build -f Dockerfile -t ikhsannugs/python-azure:${BUILD_NUMBER} ."
-            sh "docker push ikhsannugs/python-azure:${BUILD_NUMBER}"
-            sh "docker image rm ikhsannugs/python-azure:${BUILD_NUMBER}"
+            sh "docker build -f Dockerfile -t ikhsannugs/python-azure:${BRANCH_NAME}-${BUILD_NUMBER} ."
+            sh "docker push ikhsannugs/python-azure:${BRANCH_NAME}-${BUILD_NUMBER}"
+            sh "docker image rm ikhsannugs/python-azure:${BRANCH_NAME}-${BUILD_NUMBER}"
           }
         }
       }
       stage('Deploy') {
         steps{
-          sshagent(credentials : ['ssh-ikhsan']) {
-            sh 'ssh -o StrictHostKeyChecking=no ikhsan@34.101.221.127 "docker rm -f python-azure; docker container run -d -p 5555:5555 --name python-azure ikhsannugs/python-azure:${BUILD_NUMBER}"'
+          script{
+            sh "sed -i 's/tujuan/${BRANCH_NAME}/g' deploy-apps.yaml"
+            sh "sed -i 's/versi/${BUILD_NUMBER}/g' deploy-apps.yaml"
+            sh "kubectl apply -f deploy-nodejs-backend.yaml"
           }
         }
       } 
