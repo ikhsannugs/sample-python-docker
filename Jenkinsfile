@@ -31,8 +31,9 @@ pipeline {
         }
       }
       stage('Deploy') {
-        withKubeConfig([credentialsId: 'kubeconfig-cluster-ict'])
-        sh "kubectl apply -f deploy-apps.yaml"
+        withKubeConfig([credentialsId: 'kubeconfig-cluster-ict']) {
+          sh "kubectl apply -f deploy-apps.yaml"
+        }
       } 
   }
 }
