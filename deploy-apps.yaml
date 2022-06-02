@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: python-azure
+  labels:
+    app: python-azure
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: python-azure
+  template:
+    metadata:
+      labels:
+        app: python-azure
+    spec:
+      containers:
+      - name: python-azure
+        image: ikhsannugs/python-azure:tujuan-versi
+        ports:
+        - name: http
+          containerPort: 5555
