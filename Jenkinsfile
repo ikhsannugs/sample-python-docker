@@ -22,14 +22,17 @@ pipeline {
           }
         }
       }
-      stage('Deploy') {
+      stage('Input Version Image') {
         steps{
           script{
             sh "sed -i 's/tujuan/${BRANCH_NAME}/g' deploy-apps.yaml"
             sh "sed -i 's/versi/${BUILD_NUMBER}/g' deploy-apps.yaml"
-            sh "kubectl apply -f deploy-nodejs-backend.yaml"
           }
         }
+      }
+      stage('Deploy') {
+        withKubeConfig([credentialsId: 'kubeconfig-cluster-ict'])
+        sh "kubectl apply -f deploy-apps.yaml"
       } 
   }
 }
